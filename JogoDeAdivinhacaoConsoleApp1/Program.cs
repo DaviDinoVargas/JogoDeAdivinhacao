@@ -1,4 +1,6 @@
-﻿namespace JogoDeAdivinhacaoConsoleApp1
+﻿using static JogoDeAdivinhacaoConsoleApp1.JogoDeAdivinhacao;
+
+namespace JogoDeAdivinhacaoConsoleApp1
 {
     internal class Program
     {
@@ -14,7 +16,7 @@
                 if (!DesejaContinuar())
                     break;
             }
-
+        }
             static void ExibirMenu()
             {
                 Console.WriteLine("----------------------------------------");
@@ -32,17 +34,30 @@
             {
                 int totalTentativas = 0;
                 bool entradaValida = false;
+
                 while (!entradaValida)
                 {
                     Console.Write("Digite sua dificuldade: ");
                     string opcao = Console.ReadLine()!.Trim();
 
-                    switch (opcao)
+                    if (opcao == "1")
                     {
-                        case "1": totalTentativas = 10; entradaValida = true; break;
-                        case "2": totalTentativas = 5; entradaValida = true; break;
-                        case "3": totalTentativas = 3; entradaValida = true; break;
-                        default: Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3."); break;
+                        totalTentativas = 10;
+                        entradaValida = true;
+                    }
+                    else if (opcao == "2")
+                    {
+                        totalTentativas = 5;
+                        entradaValida = true;
+                    }
+                    else if (opcao == "3")
+                    {
+                        totalTentativas = 3;
+                        entradaValida = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3.");
                     }
                 }
                 return totalTentativas;
@@ -50,9 +65,8 @@
 
             static void Jogar(int totalTentativas)
             {
-                // gerar um número secreto aleatório
-                Random geradorDeNumeros = new Random();
-                int numeroSecreto = geradorDeNumeros.Next(1, 21);
+                JogoDeAdivinhacao.IniciarNovoJogo(totalTentativas);
+                bool acertou = false;
 
                 for (int tentativas = 1; tentativas <= totalTentativas; tentativas++)
                 {
@@ -62,50 +76,47 @@
                     Console.Write("Digite um número: ");
                     int numeroDigitado = Convert.ToInt32(Console.ReadLine());
 
+                    ResultadoTentativa resultado = JogoDeAdivinhacao.VerificarTentativa(numeroDigitado);
+
                     // Lógica do jogo
 
-                    if (numeroDigitado == numeroSecreto)
+                    if (resultado == ResultadoTentativa.Acerto)
                     {
                         Console.WriteLine("----------------------------------------");
                         Console.WriteLine("Você acertou o número secreto!");
                         Console.WriteLine("----------------------------------------");
+                        acertou = true;
                         break;
                     }
 
-                    else if (numeroDigitado > numeroSecreto)
+                    else if (resultado == ResultadoTentativa.NumeroMaior)
                     {
                         Console.WriteLine("-----------------------------------------------");
                         Console.WriteLine("O numero informado é maior que o numero secreto");
                         Console.WriteLine("-----------------------------------------------");
                     }
-                    else if (numeroDigitado < numeroSecreto)
+                    else
                     {
                         Console.WriteLine("-----------------------------------------------");
                         Console.WriteLine("O numero informado é menor que o numero secreto");
                         Console.WriteLine("-----------------------------------------------");
-
-                    }
-                    if (tentativas == totalTentativas)
-                    {
-                        Console.WriteLine("----------------------------------------");
-                        Console.WriteLine("que pena! Você não conseguiu acertar. O número secreto era " + numeroSecreto);
-                        Console.WriteLine("----------------------------------------");
-                        break;
                     }
 
                     Console.Write("Aperte <Enter>");
                     Console.ReadLine();
                 }
-            }
 
-                static bool DesejaContinuar()
+                if (!acertou)
                 {
-                    Console.Write("Deseja continuar? (s/N): ");
-                    return Console.ReadLine()!.Trim().ToUpper() == "S";
-             
-                        
+                    Console.WriteLine("----------------------------------------");
+                    Console.WriteLine("que pena! Você não conseguiu acertar. O número secreto era " + JogoDeAdivinhacao.ObterNumeroSecreto());
+                    Console.WriteLine("----------------------------------------");
                 }
-            
+            }
+            static bool DesejaContinuar()
+            {
+                Console.Write("Deseja continuar? (s/N): ");
+                return Console.ReadLine()!.Trim().ToUpper() == "S";
+            }
         }
     }
-}
