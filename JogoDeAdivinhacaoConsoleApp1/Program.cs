@@ -8,6 +8,15 @@
             while (true)
             {
                 Console.Clear();
+                ExibirMenu();
+                int totalTentativas = EscolherDificuldade();
+                Jogar(totalTentativas);
+                if (!DesejaContinuar())
+                    break;
+            }
+
+            static void ExibirMenu()
+            {
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine("         Jogo de Adivinhação");
                 Console.WriteLine("----------------------------------------");
@@ -17,39 +26,33 @@
                 Console.WriteLine("       2- Normal    5 tentativas");
                 Console.WriteLine("       3- Dificil   3 tentativas");
                 Console.WriteLine("----------------------------------------");
+            }
 
+            static int EscolherDificuldade()
+            {
                 int totalTentativas = 0;
                 bool entradaValida = false;
-
                 while (!entradaValida)
                 {
                     Console.Write("Digite sua dificuldade: ");
-                    string opcao = Console.ReadLine().Trim();
+                    string opcao = Console.ReadLine()!.Trim();
 
-                    if (opcao == "1")
+                    switch (opcao)
                     {
-                        totalTentativas = 10;
-                        entradaValida = true;
-                    }
-                    else if (opcao == "2")
-                    {
-                        totalTentativas = 5;
-                        entradaValida = true;
-                    }
-                    else if (opcao == "3")
-                    {
-                        totalTentativas = 3;
-                        entradaValida = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3.");
+                        case "1": totalTentativas = 10; entradaValida = true; break;
+                        case "2": totalTentativas = 5; entradaValida = true; break;
+                        case "3": totalTentativas = 3; entradaValida = true; break;
+                        default: Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3."); break;
                     }
                 }
+                return totalTentativas;
+            }
 
+            static void Jogar(int totalTentativas)
+            {
                 // gerar um número secreto aleatório
                 Random geradorDeNumeros = new Random();
-                int numeroSecreto = geradorDeNumeros.Next(1,21);
+                int numeroSecreto = geradorDeNumeros.Next(1, 21);
 
                 for (int tentativas = 1; tentativas <= totalTentativas; tentativas++)
                 {
@@ -90,15 +93,19 @@
                         break;
                     }
 
-                    Console.WriteLine("Aperte <Enter>");
+                    Console.Write("Aperte <Enter>");
                     Console.ReadLine();
                 }
-                Console.Write("Deseja continuar? (s/N): ");
-                string opcaoContinuar = Console.ReadLine().ToUpper();
-                if (opcaoContinuar != "S")
-                    break;
-
             }
+
+                static bool DesejaContinuar()
+                {
+                    Console.Write("Deseja continuar? (s/N): ");
+                    return Console.ReadLine()!.Trim().ToUpper() == "S";
+             
+                        
+                }
+            
         }
     }
 }
