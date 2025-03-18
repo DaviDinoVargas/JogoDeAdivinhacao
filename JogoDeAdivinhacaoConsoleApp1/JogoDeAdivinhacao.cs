@@ -7,7 +7,7 @@
 
         public enum ResultadoTentativa
         {
-            Acerto,
+            Acertou,
             NumeroMenor,
             NumeroMaior
         }
@@ -21,7 +21,7 @@
         public static ResultadoTentativa VerificarTentativa(int numeroDigitado)
         {
             if (numeroDigitado == numeroSecreto)
-                return ResultadoTentativa.Acerto;
+                return ResultadoTentativa.Acertou;
 
             return numeroDigitado > numeroSecreto ?
             ResultadoTentativa.NumeroMaior :

@@ -80,7 +80,7 @@ namespace JogoDeAdivinhacaoConsoleApp1
 
                     // Lógica do jogo
 
-                    if (resultado == ResultadoTentativa.Acerto)
+                    if (resultado == ResultadoTentativa.Acertou)
                     {
                         Console.WriteLine("----------------------------------------");
                         Console.WriteLine("Você acertou o número secreto!");
