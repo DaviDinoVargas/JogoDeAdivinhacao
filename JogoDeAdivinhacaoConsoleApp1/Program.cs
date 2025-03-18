@@ -1,4 +1,6 @@
-﻿namespace JogoDeAdivinhacaoConsoleApp1
+﻿using static JogoDeAdivinhacaoConsoleApp1.JogoDeAdivinhacao;
+
+namespace JogoDeAdivinhacaoConsoleApp1
 {
     internal class Program
     {
@@ -8,6 +10,15 @@
             while (true)
             {
                 Console.Clear();
+                ExibirMenu();
+                int totalTentativas = EscolherDificuldade();
+                Jogar(totalTentativas);
+                if (!DesejaContinuar())
+                    break;
+            }
+
+            static void ExibirMenu()
+            {
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine("         Jogo de Adivinhação");
                 Console.WriteLine("----------------------------------------");
@@ -26,27 +37,19 @@
                     Console.Write("Digite sua dificuldade: ");
                     string opcao = Console.ReadLine()!.Trim();
 
-                    if (opcao == "1")
+                    switch (opcao)
                     {
-                        totalTentativas = 10;
-                        entradaValida = true;
-                    }
-                    else if (opcao == "2")
-                    {
-                        totalTentativas = 5;
-                        entradaValida = true;
-                    }
-                    else if (opcao == "3")
-                    {
-                        totalTentativas = 3;
-                        entradaValida = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3.");
+                        case "1": totalTentativas = 10; entradaValida = true; break;
+                        case "2": totalTentativas = 5; entradaValida = true; break;
+                        case "3": totalTentativas = 3; entradaValida = true; break;
+                        default: Console.WriteLine("Opção inválida! Escolha 1, 2 ou 3."); break;
                     }
                 }
+                return totalTentativas;
+            }
 
+            static void Jogar(int totalTentativas)
+            {
                 // gerar um número secreto aleatório
                 Random geradorDeNumeros = new Random();
                 int numeroSecreto = geradorDeNumeros.Next(1, 21);
@@ -59,27 +62,31 @@
                     Console.Write("Digite um número: ");
                     int numeroDigitado = Convert.ToInt32(Console.ReadLine());
 
+                    ResultadoTentativa resultado = JogoDeAdivinhacao.VerificarTentativa(numeroDigitado);
+
                     // Lógica do jogo
 
-                    if (numeroDigitado == numeroSecreto)
+                    if (resultado == ResultadoTentativa.Acertou)
                     {
                         Console.WriteLine("----------------------------------------");
                         Console.WriteLine("Você acertou o número secreto!");
                         Console.WriteLine("----------------------------------------");
+                        acertou = true;
                         break;
                     }
 
-                    else if (numeroDigitado > numeroSecreto)
+                    else if (resultado == ResultadoTentativa.NumeroMaior)
                     {
                         Console.WriteLine("-----------------------------------------------");
                         Console.WriteLine("O numero informado é maior que o numero secreto");
                         Console.WriteLine("-----------------------------------------------");
                     }
-                    else if (numeroDigitado < numeroSecreto)
+                    else
                     {
                         Console.WriteLine("-----------------------------------------------");
                         Console.WriteLine("O numero informado é menor que o numero secreto");
                         Console.WriteLine("-----------------------------------------------");
+                    }
 
                     }
                     if (tentativas == totalTentativas)
@@ -90,15 +97,19 @@
                         break;
                     }
 
-                    Console.WriteLine("Aperte <Enter>");
+                    Console.Write("Aperte <Enter>");
                     Console.ReadLine();
                 }
-                Console.Write("Deseja continuar? (s/N): ");
-                string opcaoContinuar = Console.ReadLine()!.ToUpper();
-                if (opcaoContinuar != "S")
-                    break;
-
             }
+
+                static bool DesejaContinuar()
+                {
+                    Console.Write("Deseja continuar? (s/N): ");
+                    return Console.ReadLine()!.Trim().ToUpper() == "S";
+             
+                        
+                }
+            
         }
     }
 }
